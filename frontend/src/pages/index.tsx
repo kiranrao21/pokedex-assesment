@@ -1,115 +1,101 @@
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { Pokemon } from "../types/pokemon";
+import { pokemonService } from "../services/pokemonService";
+import { PokemonCard } from "../components/PokemonCard";
+import { SearchBar } from "../components/SearchBar";
 
 export default function Home() {
+  const [pokemons, setPokemons] = useState<Pokemon[]>([]);
+  const [search, setSearch] = useState("");
+  const [offset, setOffset] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const limit = 20;
+
+  useEffect(() => {
+    fetchPokemons(true);
+    // eslint-disable-next-line
+  }, [search]);
+
+  const fetchPokemons = async (reset = false) => {
+    setLoading(true);
+    try {
+      const data = await pokemonService.getPokemon({
+        limit,
+        offset: reset ? 0 : offset,
+        search: search || undefined,
+      });
+
+      if (reset) {
+        setPokemons(data || []);
+        setOffset(limit);
+      } else {
+        setPokemons((prev) => [...prev, ...(data || [])]);
+        setOffset((prev) => prev + limit);
+      }
+      setHasMore((data || []).length === limit);
+    } catch (error) {
+      console.error("Failed to fetch pokemon:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
+
   return (
-    <div
-      className={`${geistSans.className} ${geistMono.className} font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20`}
-    >
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/pages/index.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen flex flex-col">
+      {/* Fixed top search bar */}
+      <SearchBar value={search} onChange={(value) => setSearch(value)} />
+
+      {/* Layout with left/right images and scrollable middle */}
+      <div className="flex flex-1">
+        {/* Left fixed image */}
+        <div className="hidden md:flex flex-col justify-center items-center w-32 bg-gray-50">
+          <Image src="/file.svg" alt="Left" width={64} height={64} />
+          {/* Carousel placeholder */}
+          <div className="mt-4 w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center">
+            Carousel
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Middle scrollable Pokémon list */}
+        <div className="flex-1 overflow-y-auto p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {pokemons.length === 0 && !loading && (
+              <div className="col-span-full text-center text-gray-500">
+                No Pokémon found.
+              </div>
+            )}
+            {pokemons.map((pokemon) => (
+              <PokemonCard key={pokemon.name} pokemon={pokemon} />
+            ))}
+          </div>
+          {hasMore && (
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => fetchPokemons()}
+                disabled={loading}
+                className="px-6 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700"
+              >
+                {loading ? "Loading..." : "Load More"}
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Right fixed image */}
+        <div className="hidden md:flex flex-col justify-center items-center w-32 bg-gray-50">
+          <Image src="/window.svg" alt="Right" width={64} height={64} />
+          {/* Banner placeholder */}
+          <div className="mt-4 w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center">
+            Banner
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
