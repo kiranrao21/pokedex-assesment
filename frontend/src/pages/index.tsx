@@ -4,6 +4,7 @@ import { Pokemon } from "../types/pokemon";
 import { pokemonService } from "../services/pokemonService";
 import { PokemonCard } from "../components/PokemonCard";
 import { SearchBar } from "../components/SearchBar";
+import { HttpStatus } from "../types/api";
 
 export default function Home() {
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
@@ -21,20 +22,24 @@ export default function Home() {
   const fetchPokemons = async (reset = false) => {
     setLoading(true);
     try {
-      const data = await pokemonService.getPokemon({
+      const response = await pokemonService.getPokemon({
         limit,
         offset: reset ? 0 : offset,
         search: search || undefined,
       });
 
-      if (reset) {
-        setPokemons(data || []);
-        setOffset(limit);
+      if (response.status === HttpStatus.OK && response.data) {
+        if (reset) {
+          setPokemons(response.data);
+          setOffset(limit);
+        } else {
+          setPokemons((prev) => [...prev, ...(response.data as Pokemon[])]);
+          setOffset((prev) => prev + limit);
+        }
+        setHasMore(response.data.length === limit);
       } else {
-        setPokemons((prev) => [...prev, ...(data || [])]);
-        setOffset((prev) => prev + limit);
+        console.error(response.error);
       }
-      setHasMore((data || []).length === limit);
     } catch (error) {
       console.error("Failed to fetch pokemon:", error);
     } finally {
