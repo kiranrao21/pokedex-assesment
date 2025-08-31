@@ -12,7 +12,7 @@ export interface PokeAPIDetailResponse {
   name: string;
   sprites: {
     other: {
-      'official-artwork': {
+      "official-artwork": {
         front_default: string;
       };
     };
