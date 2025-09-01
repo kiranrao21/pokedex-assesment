@@ -7,7 +7,6 @@ import { PokemonCard } from "@/components/PokemonCard";
 import { SearchBar } from "@/components/SearchBar";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { Banner } from "@/components/Banner";
-import { SideImages } from "@/components/SideImages";
 
 export default function Page() {
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
@@ -16,7 +15,41 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
+  const [isFixed, setIsFixed] = useState(false);
   const limit = 20;
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const searchSection = document.getElementById("search-section");
+      const leftImage = document.getElementById("left-image");
+      const rightImage = document.getElementById("right-image");
+
+      if (searchSection && leftImage && rightImage) {
+        const rect = searchSection.getBoundingClientRect();
+
+        if (rect.top <= 0 && !isFixed) {
+          setIsFixed(true);
+          leftImage.style.position = "fixed";
+          leftImage.style.top = "72px";
+          rightImage.style.position = "fixed";
+          rightImage.style.top = "72px";
+          rightImage.style.right = "32px";
+        } else if (rect.top > 0 && isFixed) {
+          setIsFixed(false);
+          leftImage.style.position = "static";
+          leftImage.style.top = "auto";
+          rightImage.style.position = "static";
+          rightImage.style.top = "auto";
+          rightImage.style.right = "auto";
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Check initial position
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isFixed]);
 
   useEffect(() => {
     fetchPokemons(true);
@@ -77,25 +110,62 @@ export default function Page() {
 
         <div className="relative flex justify-center">
           <div className="pokemon-content-wrapper w-full max-w-7xl relative">
-            <SideImages />
-            <div className="search-bar-section sticky top-0 left-0 right-0 z-[999] bg-white py-4 shadow-md">
-              <div className="container mx-auto flex justify-center">
-                <div className="w-full px-4 xl:px-[200px]">
-                  <SearchBar onSearch={handleSearch} />
+            <div
+              className="pokemon-section grid grid-cols-12 gap-4 mx-auto px-4"
+              id="pokemon-section"
+            >
+              {/* Left Static Image */}
+              <div className="col-span-2">
+                <div
+                  className="side-image-left w-[150px] transition-all duration-300"
+                  id="left-image"
+                >
+                  <div className="h-[600px] bg-yellow-200 rounded-lg flex items-center justify-center">
+                    <span className="text-xl font-semibold text-yellow-800 rotate-[-90deg]">
+                      Static Image 1
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="pokemon-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mx-auto px-4 xl:px-[200px]">
-              {pokemons.map((pokemon, index) => (
-                <PokemonCard
-                  key={pokemon.id || `pokemon-${index}`}
-                  pokemon={{
-                    ...pokemon,
-                    image: pokemon.image || null,
-                  }}
-                  priority={index < 4}
-                />
-              ))}
+
+              {/* Middle Content - Search and Pokemon Cards */}
+              <div className="col-span-8">
+                {/* Search Bar - Fixed */}
+                <div
+                  className="sticky top-0 bg-white py-2 z-[999] mb-6"
+                  id="search-section"
+                >
+                  <SearchBar onSearch={handleSearch} />
+                </div>
+
+                {/* Pokemon Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {pokemons.map((pokemon, index) => (
+                    <PokemonCard
+                      key={pokemon.id || `pokemon-${index}`}
+                      pokemon={{
+                        ...pokemon,
+                        image: pokemon.image || null,
+                      }}
+                      priority={index < 4}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Right Static Image */}
+              <div className="col-span-2">
+                <div
+                  className="side-image-right w-[150px] transition-all duration-300"
+                  id="right-image"
+                >
+                  <div className="h-[600px] bg-pink-200 rounded-lg flex items-center justify-center">
+                    <span className="text-xl font-semibold text-pink-800 rotate-90">
+                      Static Image 2
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
             {loading && (
               <div className="flex justify-center mt-8">
