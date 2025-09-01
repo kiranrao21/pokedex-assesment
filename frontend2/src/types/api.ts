@@ -30,7 +30,10 @@ export enum ErrorMessage {
 }
 
 export interface APIResponse<T> {
-  status: HttpStatus;
-  data?: T;
+  status: number;
+  data: {
+    data: T;
+  };
+  message?: string;
   error?: string;
 }

@@ -51,7 +51,7 @@ class PokemonService {
       if (filteredPokemons.length === 0) {
         return {
           status: HttpStatus.NOT_FOUND,
-          error: "No Pokémon found matching the criteria",
+          error: "No Pokemon found matching the criteria",
         };
       }
 

@@ -1,12 +1,11 @@
 export interface Pokemon {
+  id: number;
   name: string;
-  image: string;
+  image: string | null;
   types: string[];
-  height?: number;
-  weight?: number;
 }
 
 export interface PokemonResponse {
-  results: Pokemon[];
-  count: number;
+  status: number;
+  data: Pokemon[];
 }
