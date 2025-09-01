@@ -96,9 +96,8 @@ export default function Page() {
   };
 
   return (
-    <main className="min-h-screen p-8">
-      {/* Main content */}
-      <div className="container mx-auto">
+    <main className="min-h-screen">
+      <div className="max-w-7xl mx-auto px-4">
         <div className="banner-section relative z-20">
           <Banner />
           {error && (
@@ -108,19 +107,19 @@ export default function Page() {
         {/* Pokemon cards section with side images */}
         {/* Fixed search bar with same width as pokemon grid */}
 
-        <div className="relative flex justify-center">
-          <div className="pokemon-content-wrapper w-full max-w-7xl relative">
+        <div className="relative">
+          <div className="pokemon-content-wrapper relative">
             <div
-              className="pokemon-section grid grid-cols-12 gap-4 mx-auto px-4"
+              className="pokemon-section flex justify-between gap-4"
               id="pokemon-section"
             >
               {/* Left Static Image */}
-              <div className="col-span-2">
+              <div className="w-[200px] xl:block hidden">
                 <div
-                  className="side-image-left w-[150px] transition-all duration-300"
+                  className="side-image-left transition-all duration-300"
                   id="left-image"
                 >
-                  <div className="h-[600px] bg-yellow-200 rounded-lg flex items-center justify-center">
+                  <div className="h-[600px] w-full bg-yellow-200 rounded-lg flex items-center justify-center">
                     <span className="text-xl font-semibold text-yellow-800 rotate-[-90deg]">
                       Static Image 1
                     </span>
@@ -129,10 +128,10 @@ export default function Page() {
               </div>
 
               {/* Middle Content - Search and Pokemon Cards */}
-              <div className="col-span-8">
+              <div className="flex-1">
                 {/* Search Bar - Fixed */}
                 <div
-                  className="sticky top-0 bg-white py-2 z-[999] mb-6"
+                  className="sticky top-0 bg-white z-[999] mb-6"
                   id="search-section"
                 >
                   <SearchBar onSearch={handleSearch} />
@@ -154,12 +153,12 @@ export default function Page() {
               </div>
 
               {/* Right Static Image */}
-              <div className="col-span-2">
+              <div className="w-[200px] xl:block hidden">
                 <div
-                  className="side-image-right w-[150px] transition-all duration-300"
+                  className="side-image-right transition-all duration-300"
                   id="right-image"
                 >
-                  <div className="h-[600px] bg-pink-200 rounded-lg flex items-center justify-center">
+                  <div className="h-[600px] w-full bg-pink-200 rounded-lg flex items-center justify-center">
                     <span className="text-xl font-semibold text-pink-800 rotate-90">
                       Static Image 2
                     </span>
