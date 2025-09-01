@@ -62,12 +62,21 @@ The backend server will start on http://localhost:5000
 cd frontend2
 ```
 
-2. Install dependencies:
+2. Configure the environment:
+   - Copy `.env.example` to `.env` and adjust values if needed
+   - The example configuration is provided for assessment purposes:
+   ```env
+   # .env.example
+   NEXT_PUBLIC_API_URL=http://localhost:5000
+   ```
+   - Note: In a production environment, sensitive configurations should be properly secured
+
+3. Install dependencies:
 ```bash
 npm install
 ```
 
-3. Start the development server:
+4. Start the development server:
 ```bash
 npm run dev
 ```
