@@ -63,7 +63,6 @@ cd frontend2
 ```
 
 2. Configure the environment:
-   - Copy `.env.example` to `.env` and adjust values if needed
    - The example configuration is provided for assessment purposes:
    ```env
    # .env.example
