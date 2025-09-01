@@ -33,7 +33,7 @@ export default function Page() {
           leftImage.style.top = "72px";
           rightImage.style.position = "fixed";
           rightImage.style.top = "72px";
-          rightImage.style.right = "32px";
+          // rightImage.style.right = "32px";
         } else if (rect.top > 0 && isFixed) {
           setIsFixed(false);
           leftImage.style.position = "static";
