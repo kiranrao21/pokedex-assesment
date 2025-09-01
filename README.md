@@ -1,6 +1,6 @@
-# Pokédex Assessment
+# Pokedex Assessment
 
-A full-stack Pokémon application with a Next.js frontend and Node.js backend.
+A full-stack Pokemon application with a Next.js frontend and Node.js backend.
 
 ## Architecture Overview
 
@@ -85,15 +85,15 @@ The API endpoints are served through Next.js API routes, providing a secure and 
 
 ### Endpoints
 
-#### Get Pokémon List
+#### Get Pokemon List
 ```http
 GET /api/pokemon
 ```
 
 Query Parameters:
-- `limit` (number): Number of Pokémon to return (default: 20)
-- `offset` (number): Number of Pokémon to skip (default: 0)
-- `search` (string): Search Pokémon by name
+- `limit` (number): Number of Pokemon to return (default: 20)
+- `offset` (number): Number of Pokemon to skip (default: 0)
+- `search` (string): Search Pokemon by name
 
 Response:
 ```json
