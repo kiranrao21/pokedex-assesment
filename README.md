@@ -87,7 +87,7 @@ The API endpoints are served through Next.js API routes, providing a secure and 
 
 #### Get Pokémon List
 ```http
-GET /pokemon
+GET /api/pokemon
 ```
 
 Query Parameters:
@@ -101,51 +101,14 @@ Response:
   "status": 200,
   "data": [
     {
-      "id": number,
       "name": string,
       "image": string,
       "types": string[],
-      "stats": {
-        "hp": number,
-        "attack": number,
-        "defense": number,
-        "specialAttack": number,
-        "specialDefense": number,
-        "speed": number
-      }
+      "height": number,
+      "weight": number
     }
   ],
-  "message": string
-}
-```
-
-#### Get Single Pokémon
-```http
-GET /pokemon/:id
-```
-
-Parameters:
-- `id` (number): Pokémon ID
-
-Response:
-```json
-{
-  "status": 200,
-  "data": {
-    "id": number,
-    "name": string,
-    "image": string,
-    "types": string[],
-    "stats": {
-      "hp": number,
-      "attack": number,
-      "defense": number,
-      "specialAttack": number,
-      "specialDefense": number,
-      "speed": number
-    }
-  },
-  "message": string
+  "error": string
 }
 ```
 
